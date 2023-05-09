@@ -20,53 +20,6 @@ public class Incidencia {
     }
 
     //metodos
-    public String getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(String fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getHora() {
-        return hora;
-    }
-
-    public void setHora(String hora) {
-        this.hora = hora;
-    }
-
-    public String getMatriculaPropia() {
-        return matriculaPropia;
-    }
-
-    public void setMatriculaPropia(String matriculaPropia) {
-        this.matriculaPropia = matriculaPropia;
-    }
-
-    public String getMatriculaAjena() {
-        return matriculaAjena;
-    }
-
-    public void setMatriculaAjena(String matriculaAjena) {
-        this.matriculaAjena = matriculaAjena;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getCodigoIncidencia() {
-        return codigoIncidencia;
-    }
-
-    public void setCodigoIncidencia(String codigoIncidencia) {
-        this.codigoIncidencia = codigoIncidencia;
-    }
 
     @Override
     public String toString() {

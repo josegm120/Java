@@ -23,10 +23,6 @@ public class Main {
         String iban2 ="";
         float cantidad;
 
-
-
-
-
         do {
             System.out.println("Programa prototipo de gestión bancaria:\n" +
                     "0. Salir\n" +
