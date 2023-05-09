@@ -1,6 +1,7 @@
 package com.politecnicomalaga;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Cliente {
     //atributos
@@ -12,6 +13,8 @@ public class Cliente {
     private String email;
     private String telf;
     private ArrayList<Incidencia> incidencias;
+
+
 
     //constructor
     public Cliente(String dni, String cod_poliza, String nombre, String apellidos, String direccion, String email, String telf) {
