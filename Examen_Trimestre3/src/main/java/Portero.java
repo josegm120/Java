@@ -9,8 +9,7 @@ public class Portero extends Jugador{
 
     public Portero(String sCadenaCSV) {
         super(sCadenaCSV);
-        String[] lineas = sCadenaCSV.split("\n");
-        String[] atributos = lineas[0].split(";");
+        String[] atributos = sCadenaCSV.split(":")[1].split(";");
         this.golesEncajados = Integer.parseInt(atributos[9]);
     }
 

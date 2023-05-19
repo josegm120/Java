@@ -28,8 +28,7 @@ public class Jugador {
     public Jugador(String sCadenaCSV){
         //Este metodo permite crear una lista que contiene cada jugador con sus atributos, haciando una lista que en cada fila tenga un jugador
         //y en cada fila almacena en otra lista los atributos del jugador
-        String[] lineas = sCadenaCSV.split("\n");
-        String[] atributos = lineas[0].split(";");
+        String[] atributos = sCadenaCSV.split(":")[1].split(";");
         if (atributos[0].equals("JUGADOR")) {
             this.nombre = atributos[1];
             this.apellidos = atributos[2];
@@ -111,7 +110,7 @@ public class Jugador {
     public void setGoles(int goles) {
         //En este motodo set goles compruebo que me den un valor válido y luego le sumo a los goles ya definidos los goles que me dan
         if(goles<0){
-            this.goles = 0;
+            this.goles += 0;
         }else{
             this.goles += goles;
         }
