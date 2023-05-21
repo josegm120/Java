@@ -1,47 +1,55 @@
 import java.time.YearMonth;
-import java.util.LinkedList;
 
 public class Jugador {
-    //Atributos
-    protected String nombre;
-    protected String apellidos;
-    protected String dni;
-    protected String email;
-    protected String telefono;
-    protected Integer nacimiento;
-    protected int dorsal;
-    protected int goles;
+    protected String nombre, apellidos, dni, email, telefono;
+    protected int nacimiento, dorsal, goles;
 
-    //Constructor
-    public Jugador(String nombre, String apellidos, String dni, String email, String telefono, Integer nacimiento, int dorsal, int goles) {
+    public Jugador(String nombre, String apellidos, String dni, String email, String telefono, int nacimiento, int dorsal, int goles) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.dni = dni;
         this.email = email;
         this.telefono = telefono;
         this.nacimiento = nacimiento;
-        this.dorsal = dorsal;
-        this.goles = goles;
+
+        if (goles >= 0) { //Si goles son mayor o igual a cero
+            this.goles = goles;
+        }
+
+        if (dorsal >= 0 && dorsal <= 100) {
+            this.dorsal = dorsal;
+        } else {
+            this.dorsal = 100;
+        }
     }
 
-    //Constructor csv
-    public Jugador(String sCadenaCSV){
-        //Este metodo permite crear una lista que contiene cada jugador con sus atributos, haciando una lista que en cada fila tenga un jugador
-        //y en cada fila almacena en otra lista los atributos del jugador
-        String[] atributos = sCadenaCSV.split(":")[1].split(";");
-        if (atributos[0].equals("JUGADOR")) {
+    public Jugador(String sCadenaCSV) {
+
+        String[] atributos = sCadenaCSV.split(":")[1].split(":");
+        if (atributos[0].equals("JUGADOR") || atributos[0].equals("PORTERO")) {
             this.nombre = atributos[1];
             this.apellidos = atributos[2];
             this.dni = atributos[3];
             this.email = atributos[4];
             this.telefono = atributos[5];
             this.nacimiento = Integer.parseInt(atributos[6]);
-            this.dorsal = Integer.parseInt(atributos[7]);
-            this.goles = Integer.parseInt(atributos[8]);
+            this.goles = Integer.parseInt(atributos[7]);
+            this.dorsal = Integer.parseInt(atributos[8]);
+
         }
     }
 
-    //Setters y Getters
+    public boolean mayorEdad () {
+        boolean mayor = true;
+        int edad = (YearMonth.now().getYear()) - nacimiento;
+        if (edad > 17) { //El jugador tiene más de 17 años
+            mayor = true;
+        } else {
+            mayor = false;
+        }
+        return mayor;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -82,11 +90,11 @@ public class Jugador {
         this.telefono = telefono;
     }
 
-    public Integer getNacimiento() {
+    public int getNacimiento() {
         return nacimiento;
     }
 
-    public void setNacimiento(Integer nacimiento) {
+    public void setNacimiento(int nacimiento) {
         this.nacimiento = nacimiento;
     }
 
@@ -95,12 +103,7 @@ public class Jugador {
     }
 
     public void setDorsal(int dorsal) {
-        //En este setter compruebo que me den valores válidos
-        if(dorsal<1||dorsal>9){
-            this.dorsal = 100;
-        }else{
-            this.dorsal = dorsal;
-        }
+        this.dorsal = dorsal;
     }
 
     public int getGoles() {
@@ -108,50 +111,30 @@ public class Jugador {
     }
 
     public void setGoles(int goles) {
-        //En este motodo set goles compruebo que me den un valor válido y luego le sumo a los goles ya definidos los goles que me dan
-        if(goles<0){
-            this.goles += 0;
-        }else{
-            this.goles += goles;
-        }
-
-    }
-
-    public boolean mayorEdad(){
-        //Tomo el año actual con la clase yearmonth le resto 17 para que al comprobar con la variable nacimiento
-        // me da si tiene 17 años o no
-        Integer year = YearMonth.now().getYear();
-
-        year -= 17;
-
-        if(this.nacimiento <= year){
-            return true;
-        }else{
-            return false;
-        }
+        this.goles = goles;
     }
 
     @Override
     public String toString() {
-        StringBuilder sCadenaCSV;
+            StringBuilder sCadenaCSV;
 
-        sCadenaCSV = new StringBuilder(String.format("JUGADOR:" +
-                        "%10s;" +
-                        "%20s;" +
-                        "%9s;" +
-                        "%20s;" +
-                        "%9s;" +
-                        "%4s;" +
-                        "%3s;" +
-                        "%3s\n",
-                this.nombre,
-                this.apellidos,
-                this.dni,
-                this.email,
-                this.telefono,
-                this.nacimiento,
-                this.dorsal,
-                this.goles));
-        return sCadenaCSV.toString();
+            sCadenaCSV = new StringBuilder(String.format("JUGADOR:" +
+                            "%10s;" +
+                            "%20s;" +
+                            "%9s;" +
+                            "%20s;" +
+                            "%9s;" +
+                            "%4s;" +
+                            "%3s;" +
+                            "%3s;\n",
+                    this.nombre,
+                    this.apellidos,
+                    this.dni,
+                    this.email,
+                    this.telefono,
+                    this.nacimiento,
+                    this.dorsal,
+                    this.goles));
+            return sCadenaCSV.toString();
     }
 }

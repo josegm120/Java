@@ -10,7 +10,7 @@ public class Equipo {
     protected Portero[] listaPorteros;
 
     //Constructor
-    public Equipo(String nombre, int puntuacion, String ciudad, String email, boolean estaActivo, HashMap<String, Jugador> listaJugadores, Portero[] listaPorteros) {
+    public Equipo(String nombre, int puntuacion, String ciudad, String email, boolean estaActivo) {
         this.nombre = nombre;
         this.puntuacion = 0;
         this.ciudad = ciudad;
@@ -23,16 +23,13 @@ public class Equipo {
     public Equipo(String sCadenaCSV){
         //Este metodo permite crear una lista que contiene cada equipo, y dentro decada equipo crea otras dos listas una que contine porteros
         //y otra que contine jugadores, para mostrarlos en mantalla como pide el ejercicio
-        String[] lineas = sCadenaCSV.split("\n");
-        String[] atributos = lineas[0].split(";");
+        String[] atributos = sCadenaCSV.split(":")[1].split(";");
         if (atributos[0].equals("EQUIPO")) {
             this.nombre = atributos[1];
             this.puntuacion = Integer.parseInt(atributos[2]);
             this.ciudad = atributos[3];
             this.email = atributos[4];
             this.estaActivo = Boolean.parseBoolean(atributos[5]);
-        } else {
-            return;
         }
         //Porteros
         this.listaPorteros = new Portero[2];

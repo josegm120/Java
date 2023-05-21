@@ -9,8 +9,19 @@ public class Portero extends Jugador{
 
     public Portero(String sCadenaCSV) {
         super(sCadenaCSV);
-        String[] atributos = sCadenaCSV.split(":")[1].split(";");
-        this.golesEncajados = Integer.parseInt(atributos[9]);
+        String[] atributos = sCadenaCSV.split(":")[1].split(":");
+        
+    }
+
+    public int getGolesEncajados() {
+        return golesEncajados;
+    }
+
+    public void setGolesEncajados(int golesEncajados) {
+        //Este metodo comprueba que me den valores válidos de goles encajados
+        if(golesEncajados>=0){
+            this.golesEncajados += golesEncajados;
+        }
     }
 
     @Override
@@ -37,18 +48,5 @@ public class Portero extends Jugador{
                 this.goles,
                 this.golesEncajados));
         return sCadenaCSV.toString();
-    }
-
-    public int getGolesEncajados() {
-        return golesEncajados;
-    }
-
-    public void setGolesEncajados(int golesEncajados) {
-        //Este metodo comprueba que me den valores válidos de goles encajados
-        if(golesEncajados<0){
-            this.golesEncajados = 0;
-        }else{
-            this.golesEncajados += golesEncajados;
-        }
     }
 }
