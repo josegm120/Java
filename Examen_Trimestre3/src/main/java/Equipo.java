@@ -1,65 +1,174 @@
 import java.util.*;
 
 public class Equipo {
+    protected HashMap<String,Jugador> jugadores;
+    protected Portero[] porteros;
     protected String nombre;
     protected int puntuacion;
     protected String ciudad;
     protected String email;
     protected boolean estaActivo;
-    protected HashMap<String,Jugador> listaJugadores;
-    protected Portero[] listaPorteros;
 
     //Constructor
-    public Equipo(String nombre, int puntuacion, String ciudad, String email, boolean estaActivo) {
+    public Equipo(String nombre, int puntuacion, String ciudad, String email) {
         this.nombre = nombre;
-        this.puntuacion = 0;
+        if (puntuacion < 0) {
+            this.puntuacion = 0;
+        } else {
+            this.puntuacion = puntuacion;
+        }
         this.ciudad = ciudad;
         this.email = email;
-        this.estaActivo = estaActivo;
-        this.listaJugadores = new HashMap<String, Jugador>();
-        this.listaPorteros = new Portero[2];
+
+        this.jugadores = new HashMap<>();
+        this.porteros = new Portero[2];
     }
 
-    public Equipo(String sCadenaCSV){
-        //Este metodo permite crear una lista que contiene cada equipo, y dentro decada equipo crea otras dos listas una que contine porteros
-        //y otra que contine jugadores, para mostrarlos en mantalla como pide el ejercicio
-        String[] atributos = sCadenaCSV.split(":")[1].split(";");
-        if (atributos[0].equals("EQUIPO")) {
-            this.nombre = atributos[1];
-            this.puntuacion = Integer.parseInt(atributos[2]);
-            this.ciudad = atributos[3];
-            this.email = atributos[4];
-            this.estaActivo = Boolean.parseBoolean(atributos[5]);
-        }
-        //Porteros
-        this.listaPorteros = new Portero[2];
-        String[] csvPorteros = sCadenaCSV.split("PORTERO");
-        String csvPortero;
-        for (int i = 1; i < csvPorteros.length; i++) {
-            csvPortero = "Portero" + csvPorteros[i];
-            Jugador jugador = new Jugador(csvPortero);
-            listaJugadores.put(jugador.dni, jugador);
-        }
-        //Jugadores
-        this.listaJugadores = new HashMap<>();
-        String[] csvJugadores = sCadenaCSV.split("JUGADOR");
-        String csvJugador;
-        for (int i = 1; i < csvJugadores.length; i++) {
-            csvJugador = "Jugador" + csvJugadores[i];
-            Jugador jugador = new Jugador(csvJugador);
-            listaJugadores.put(jugador.dni, jugador);
+    public Equipo(String sCadenaCSV) {
+        String[] lines = sCadenaCSV.split("\n");
+        String header;
+        String[] attributes;
+        Portero portero;
+        Jugador jugador;
+
+        this.jugadores = new HashMap<>();
+        this.porteros = new Portero[2];
+
+        for (int i = 0; i < lines.length; i++) {
+
+            lines[i] = lines[i].replaceAll("\n", "");
+            header = lines[i].split(":")[0];
+            attributes = lines[i].split(":")[1].split(";");
+
+            switch (header) {
+                case "EQUIPO" -> {
+                    this.nombre = attributes[0];
+                    this.puntuacion = Integer.parseInt(attributes[1]);
+                    this.ciudad = attributes[2];
+                    this.email = attributes[3];
+                }
+                case "JUGADOR" -> {
+                    jugador = new Jugador(lines[i]);
+                    this.jugadores.put(jugador.getDni(), jugador);
+                }
+                case "PORTERO" -> {
+                    portero = new Portero(lines[i]);
+                    for (int j = 0; j < this.porteros.length; j++) {
+
+                        if (this.porteros[j] == null) {
+                            this.porteros[j] = portero;
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
-    //metodos
-    public boolean addPortero(Portero p){
-        for(int i=0; i<=listaPorteros.length; i++){
+    public String getNombre() {
+        return nombre;
+    }
 
-            if(listaPorteros[1]!=null&&listaPorteros[0]!=null){
-                if(listaPorteros[i].getDni().equals(p.getDni())){
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-                } else if(listaPorteros[i].equals(null)){
-                    listaPorteros[i] = p;
+    public int getPuntuacion() {
+        return puntuacion;
+    }
+
+    public void setPuntuacion(int puntuacion) {
+        if (puntuacion > 0) {
+            this.puntuacion += puntuacion;
+        }
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isActivo() {
+        int porterosNum = 0;
+        int jugadoresNum = 0;
+        ArrayList<Jugador> jugadores = new ArrayList<>(this.jugadores.values());
+
+        for (Portero p : this.porteros) {
+            if (p != null) {
+                porterosNum++;
+            }
+        }
+        for (Jugador j : jugadores) {
+            if (j != null) {
+                jugadoresNum++;
+            }
+        }
+
+        return porterosNum >= 1 && jugadoresNum >= 5;
+
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sCsv;
+        ArrayList<Jugador> jugadores = new ArrayList<>(this.jugadores.values());
+
+        sCsv = new StringBuilder(String.format("EQUIPO:%s;%d;%s;%s\n",
+                this.nombre,
+                this.puntuacion,
+                this.ciudad,
+                this.email));
+
+        for (Portero p : this.porteros) {
+            if (p != null) {
+                sCsv.append(p.toString());
+            }
+        }
+        for (Jugador j : jugadores) {
+            if (j != null) {
+                sCsv.append(j.toString());
+            }
+        }
+
+        return sCsv.toString();
+
+    }
+
+    public boolean addPortero(Portero p) {
+        for (int i = 0; i < this.porteros.length; i++) {
+
+            if (this.porteros[i] == null) {
+                this.porteros[i] = p;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean addJugador(Jugador j) {
+        if (!this.jugadores.containsKey(j.getDni())) {
+            this.jugadores.put(j.getDni(), j);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean eliminaPortero(String dni) {
+        for (int i = 0; i < this.porteros.length; i++) {
+            if (this.porteros[i] != null) {
+                if (this.porteros[i].getDni().equals(dni)) {
+                    this.porteros[i] = null;
                     return true;
                 }
             }
@@ -67,68 +176,65 @@ public class Equipo {
         return false;
     }
 
-    public boolean addJugador(Jugador j){
-        if(listaJugadores.containsKey(j.getDni())){
-            return false;
-        }else{
-            listaJugadores.put(j.getDni(), j);
+    public boolean eliminaJugador(String dni) {
+        if (this.jugadores.containsKey(dni)) {
+            this.jugadores.remove(dni);
             return true;
-        }
-    }
-
-    public boolean eliminaPortero(String dni){
-        for(int i=0; i<=listaPorteros.length; i++){
-            if(listaPorteros[i].getDni().equals(dni)){
-                listaPorteros[i]=null;
-                return true;
-            }
         }
         return false;
     }
 
-    public boolean eliminarJugador(String dni){
-        if(listaJugadores.remove(dni)!=null){
-            return true;
-        }else{
-            return false;
+    public ArrayList<Jugador> menoresEdad() {
+
+        ArrayList<Jugador> menores = new ArrayList<>();
+
+        ArrayList<Jugador> jugadores = new ArrayList<>(this.jugadores.values());
+
+        for (Portero p : this.porteros) {
+            if (p != null) {
+                if (!p.mayorEdad()) {
+                    menores.add(p);
+                }
+            }
         }
-    }
 
-    public boolean isActivo(){
-        if(listaJugadores.size()>=5&&listaPorteros[0]!=null||listaPorteros[1]!=null){
-            return true;
-        }else{
-            return false;
+        for (Jugador j : jugadores) {
+            if (j != null) {
+                if (!j.mayorEdad()) {
+                    menores.add(j);
+                }
+            }
         }
+
+        menores.sort(new ComparaJugador());
+
+        return menores;
     }
 
-    public ArrayList<Jugador> menoresEdad(){
-        ArrayList<Jugador> Jugador = null;
+    public ArrayList<Jugador> jugadoresTitulares() {
+        ArrayList<Jugador> titulares = new ArrayList<>();
 
-        return Jugador;
+        ArrayList<Jugador> jugadores = new ArrayList<>(this.jugadores.values());
+
+        if (this.porteros[0] != null && this.porteros[1] != null) {
+            if (porteros[0].getGolesEncajados() < porteros[1].getGolesEncajados()) {
+                titulares.add(0, porteros[0]);
+            } else {
+                titulares.add(0, porteros[1]);
+            }
+        } else if (this.porteros[0] != null) {
+            titulares.add(0, porteros[0]);
+        } else if (this.porteros[1] != null) {
+            titulares.add(0, porteros[1]);
+        }
+
+        jugadores.sort(new ComparaGoles());
+
+        for (int i = 0; i < jugadores.size() || i < 5; i++) {
+            titulares.add(jugadores.get(i));
+        }
+
+        return titulares;
+
     }
-
-    public ArrayList<Jugador> jugadoresTitulares(){
-        ArrayList<Jugador> Jugador = null;
-
-        return Jugador;
-    }
-
-    public String toString() {
-        StringBuilder sCadenaCSV;
-
-        sCadenaCSV = new StringBuilder(String.format("EQUIPO:" +
-                        "%10s;" +
-                        "%3s;" +
-                        "%10s;" +
-                        "%20s;" +
-                        "%10s\n",
-                this.nombre,
-                this.puntuacion,
-                this.ciudad,
-                this.email,
-                this.estaActivo));
-        return sCadenaCSV.toString();
-    }
-
 }

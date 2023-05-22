@@ -1,14 +1,8 @@
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Scanner;
 
 public class ControladorFicheros {
-
-    //TEXT
-    public static boolean grabarEquipoCSV(String sNombreFichero, Equipo e) {
-
+    public boolean grabarEquipoCSV(String sNombreFichero, Equipo e){
         FileWriter fileWriter = null;
         PrintWriter printWriter;
         boolean correcto;
@@ -35,8 +29,7 @@ public class ControladorFicheros {
         return correcto;
     }
 
-    public static Equipo leerEquipoCSV(String sNombreFichero) throws IOException {
-
+    public Equipo leerEquipoCSV(String sNombreFichero) throws IOException {
         StringBuilder text = new StringBuilder();
         FileReader fileReader = null;
         Scanner scanner;
@@ -51,6 +44,8 @@ public class ControladorFicheros {
 
             fileReader.close();
             fileReader = null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
             if (fileReader != null) {
                 fileReader.close();
@@ -58,7 +53,6 @@ public class ControladorFicheros {
         }
 
         return new Equipo(text.toString());
-
     }
 
 }

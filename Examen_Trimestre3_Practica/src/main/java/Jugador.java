@@ -1,8 +1,8 @@
 import java.time.YearMonth;
 
 public class Jugador {
-    protected String nombre, apellidos, dni, email, telefono;
-    protected int nacimiento, dorsal, goles;
+    String nombre, apellidos, dni, email, telefono;
+    int nacimiento, dorsal, goles;
 
     public Jugador(String nombre, String apellidos, String dni, String email, String telefono, int nacimiento, int dorsal, int goles) {
         this.nombre = nombre;
@@ -11,23 +11,15 @@ public class Jugador {
         this.email = email;
         this.telefono = telefono;
         this.nacimiento = nacimiento;
-
-        if (goles >= 0) { //Si goles son mayor o igual a cero
-            this.goles = goles;
-        }
-
-        if (dorsal >= 0 && dorsal <= 100) {
+        if (dorsal>=1 && dorsal<=99){
             this.dorsal = dorsal;
-        } else {
-            this.dorsal = 100;
+        }
+        if(goles>=0){
+            this.goles = goles;
         }
     }
 
-    public Jugador(String sCadenaCSV) {
-
-        //Esto es solo por si se creara un jugador a partir de otro, sin importarlo desde un equipo entero
-        sCadenaCSV = sCadenaCSV.replaceAll("\n", "");
-
+    public Jugador(String sCadenaCSV){
         String[] atributos = sCadenaCSV.split(":")[1].split(";");
         if (atributos[0].equals("JUGADOR") || atributos[0].equals("PORTERO")) {
             this.nombre = atributos[1];
@@ -38,19 +30,40 @@ public class Jugador {
             this.nacimiento = Integer.parseInt(atributos[6]);
             this.goles = Integer.parseInt(atributos[7]);
             this.dorsal = Integer.parseInt(atributos[8]);
-
         }
     }
 
-    public boolean mayorEdad () {
-        boolean mayor = true;
-        int edad = (YearMonth.now().getYear()) - nacimiento;
-        if (edad > 17) { //El jugador tiene más de 17 años
-            mayor = true;
-        } else {
-            mayor = false;
+    public boolean mayorEdad(){
+        int añoActual = YearMonth.now().getYear();
+        if((añoActual-17) > nacimiento){
+            return false;
+        }else{
+            return true;
         }
-        return mayor;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sCadenaCSV;
+
+        sCadenaCSV = new StringBuilder(String.format("JUGADOR:" +
+                        "%s;" +
+                        "%s;" +
+                        "%s;" +
+                        "%s;" +
+                        "%s;" +
+                        "%d;" +
+                        "%d;" +
+                        "%d;\n",
+                this.nombre,
+                this.apellidos,
+                this.dni,
+                this.email,
+                this.telefono,
+                this.nacimiento,
+                this.dorsal,
+                this.goles));
+        return sCadenaCSV.toString();
     }
 
     public String getNombre() {
@@ -106,7 +119,9 @@ public class Jugador {
     }
 
     public void setDorsal(int dorsal) {
-        this.dorsal = dorsal;
+        if (dorsal>=1 && dorsal<=99){
+            this.dorsal = dorsal;
+        }
     }
 
     public int getGoles() {
@@ -114,30 +129,8 @@ public class Jugador {
     }
 
     public void setGoles(int goles) {
-        this.goles = goles;
-    }
-
-    @Override
-    public String toString() {
-            StringBuilder sCadenaCSV;
-
-            sCadenaCSV = new StringBuilder(String.format("JUGADOR:" +
-                            "%10s;" +
-                            "%20s;" +
-                            "%9s;" +
-                            "%20s;" +
-                            "%9s;" +
-                            "%4s;" +
-                            "%3s;" +
-                            "%3s;\n",
-                    this.nombre,
-                    this.apellidos,
-                    this.dni,
-                    this.email,
-                    this.telefono,
-                    this.nacimiento,
-                    this.dorsal,
-                    this.goles));
-            return sCadenaCSV.toString();
+        if(goles>=0){
+            this.goles = goles;
+        }
     }
 }

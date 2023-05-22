@@ -1,31 +1,18 @@
 public class Portero extends Jugador{
 
-    protected int golesEncajados;
+    int golesEncajados;
 
-    public Portero(String nombre, String apellidos, String dni, String email, String telefono, Integer nacimiento, int dorsal, int goles, int golesEncajados) {
+    public Portero(String nombre, String apellidos, String dni, String email, String telefono, int nacimiento, int dorsal, int goles, int golesEncajados) {
         super(nombre, apellidos, dni, email, telefono, nacimiento, dorsal, goles);
-        if (golesEncajados >= 0) {
+        if(golesEncajados>=0){
             this.golesEncajados = golesEncajados;
         }
     }
 
     public Portero(String sCadenaCSV) {
         super(sCadenaCSV);
-
-        sCadenaCSV = sCadenaCSV.replaceAll("\n", "");
-
         String[] atributos = sCadenaCSV.split(":")[1].split(";");
-        this.golesEncajados = Integer.parseInt(atributos[8]);    }
-
-    public int getGolesEncajados() {
-        return golesEncajados;
-    }
-
-    public void setGolesEncajados(int golesEncajados) {
-        //Este metodo comprueba que me den valores válidos de goles encajados
-        if(golesEncajados>=0){
-            this.golesEncajados += golesEncajados;
-        }
+        this.golesEncajados = Integer.parseInt(atributos[8]);
     }
 
     @Override
@@ -41,7 +28,7 @@ public class Portero extends Jugador{
                         "%d;" +
                         "%d;" +
                         "%d;" +
-                        "%d\n",
+                        "%d;\n",
                 this.nombre,
                 this.apellidos,
                 this.dni,
@@ -52,5 +39,15 @@ public class Portero extends Jugador{
                 this.goles,
                 this.golesEncajados));
         return sCadenaCSV.toString();
+    }
+
+    public int getGolesEncajados() {
+        return golesEncajados;
+    }
+
+    public void setGolesEncajados(int golesEncajados) {
+        if(golesEncajados>=0){
+            this.golesEncajados = golesEncajados;
+        }
     }
 }
