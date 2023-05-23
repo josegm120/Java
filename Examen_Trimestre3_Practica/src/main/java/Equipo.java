@@ -16,11 +16,11 @@ public class Equipo {
     }
 
     public Equipo(String sCadenaCSV) {
+        String[] lineas = sCadenaCSV.split("\n");
+        String[] attributes;
+        String head;
         Jugador j;
         Portero p;
-        String head;
-        String[] attributes;
-        String[] lineas = sCadenaCSV.split("\n");
 
         this.jugadores = new HashMap<>();
         this.porteros = new Portero[2];
@@ -29,41 +29,36 @@ public class Equipo {
             lineas[i] = lineas[i].replaceAll("\n", "");
             head = lineas[i].split(":")[0];
             attributes = lineas[i].split(":")[1].split(";");
-
             switch (head) {
                 case "EQUIPO":
                     this.nombre = attributes[0];
                     this.puntuacion = Integer.parseInt(attributes[1]);
                     this.ciudad = attributes[2];
                     this.email = attributes[3];
-                    break;
                 case "JUGADOR":
                     j = new Jugador(lineas[i]);
                     this.jugadores.put(j.getDni(), j);
-                    break;
                 case "PORTERO":
                     p = new Portero(lineas[i]);
-                    for (int k = 0; k < this.porteros.length; k++) {
-
-                        if (this.porteros[k] == null) {
-                            this.porteros[k] = p;
-                            break;
-                        }
-                        break;
-                    }
+                    addPortero(p);
 
             }
         }
     }
 
     public boolean addPortero(Portero p){
-        for (int i=0; i<porteros.length; i++){
-            if(porteros[i] == null && !porteros[i].getDni().equals(p.getDni())){
-                porteros[i] =p;
-                return true;
-            }
+        if(porteros[0] == null && porteros[1] == null){
+            porteros[0] = p;
+            return true;
+        } else if(porteros[0] == null && !porteros[1].equals(p)){
+            porteros[0] = p;
+            return true;
+        } else if (porteros[1] == null && !porteros[0].equals(p)){
+            porteros[1] = p;
+            return true;
+        } else{
+            return false;
         }
-        return false;
     }
 
     public boolean addJugador(Jugador j){
@@ -109,24 +104,19 @@ public class Equipo {
     }
 
     public ArrayList<Jugador> menoresEdad(){
-        ArrayList<Jugador> menores = new ArrayList<>();
         ArrayList<Jugador> jugadores = new ArrayList<>(this.jugadores.values());
 
         for (int i=0; i<porteros.length; i++){
             if(!porteros[i].mayorEdad()){
-                menores.add(porteros[i]);
+                jugadores.add(porteros[i]);
             }
         }
 
-        for(Jugador jugador: jugadores){
-            if(!jugador.mayorEdad()){
-                menores.add(jugador);
-            }
-        }
+        jugadores.removeIf(Jugador::mayorEdad);
 
-        menores.sort(new compararJugadores());
+        jugadores.sort(new compararJugadores());
 
-        return menores;
+        return jugadores;
     }
 
     public ArrayList<Jugador> jugadoresTitulares(){

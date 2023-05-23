@@ -35,8 +35,8 @@ public class ControladorFicheros {
         Scanner scanner;
 
         try {
-            fileReader = new FileReader(sNombreFichero);
             scanner = new Scanner(fileReader);
+            fileReader = new FileReader(sNombreFichero);
 
             while (scanner.hasNext()) {
                 text.append(scanner.nextLine()).append("\n");
