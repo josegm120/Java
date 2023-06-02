@@ -113,7 +113,7 @@ public class Flota {
         if(kms>=0){
             vehiculos.get(matricula).setKilometraje(kms);
             vehiculos.get(matricula).setDisponible(true);
-            return vehiculos.get(matricula).facturaAlquiler(vehiculos.get(matricula).getKilometraje());
+            return vehiculos.get(matricula).facturaAlquiler(kms);
         }else{
             return 0;
         }

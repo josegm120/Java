@@ -24,13 +24,13 @@ public class ControladorVehiculos {
                     miFlota.putVehiculo(v);
                     lineas++;
                 }else{
-                    throw new Exception("Formato inadecuado");
+
                 }
             }
             fileReader.close();
             fileReader = null;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+
         } finally {
             if (fileReader != null) {
                 fileReader.close();
@@ -59,7 +59,7 @@ public class ControladorVehiculos {
             fileWriter.close();
             fileWriter = null;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+
         } finally {
             if (fileWriter != null) {
                 fileWriter.close();
